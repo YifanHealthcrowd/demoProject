@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^3.4.0",
+    "@material-ui/icons": "^3.0.1",
     "lodash": "^4.17.11",
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
     "react-scripts": "2.1.1",
+    "react-swipeable-views": "^0.13.0",
     "validator": "^10.8.0"
   },
   "scripts": {

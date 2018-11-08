@@ -52,7 +52,6 @@ export default class Steppers extends Component {
     this.handleRoleChange = this.handleRoleChange.bind(this);
     this.state = {
       activeStep: 0,
-      roles: [true], // hack
       onSubmitValues: [],
       errorSteps: [],
       name:'',
@@ -83,9 +82,9 @@ export default class Steppers extends Component {
     console.log(`name is ${values.name} and the role is ${typeof(values.roles)}`)
     console.log('submit values:', values, 'pristine values:', pristineValues)
     console.log("this is the old state",this.state)
-    this.setState({ activeStep:0 , currentUserRole: '', name:'', onSubmitValues:[...this.state.onSubmitValues,{name:this.state.name}]},()=>{console.log("this is the new state in call back",this.state)})
+    this.setState({ activeStep:0 , currentUserRole: '', name:'', onSubmitValues:[...this.state.onSubmitValues,{name:this.state.name, role: this.state.currentUserRole}]},()=>{console.log("this is the new state in call back",this.state);this.render();})
     console.log("this is the new state",this.state)
-    this.render();
+    
   }
 
   updateErrorSteps = (field, errorSteps) => {
@@ -93,14 +92,14 @@ export default class Steppers extends Component {
   }
 
 
-  handleNameChange = event => {
+  handleNameChange = name => event => {
     console.log("name event ",event, typeof(event));
-    this.setState({ name: event});
+    this.setState({ [name]: event.target.value});
   };
 
-  handleRoleChange = event => {
+  handleRoleChange = name => event => {
     console.log("role event ", event, typeof(event));
-    this.setState({ currentUserRole: event});
+    this.setState({ currentUserRole: event.target.value});
   };
 
   render() {
@@ -111,10 +110,13 @@ export default class Steppers extends Component {
       <Grid
         container
         direction="row"
-        wrap="nowrap"
+        alignItems="center"
+        justify="center"
+        spacing={0}
+        //wrap="nowrap"
         
       >
-        <Grid item xs className={gridItem}>
+        <Grid item xs={8} alignItems='center' > 
           <Stepper activeStep={activeStep} alternativeLabel>
             {steps.map((label, i) => (
               <Step key={label}>
@@ -134,13 +136,11 @@ export default class Steppers extends Component {
               <Fragment>
                 <TextField
                   label="Name"
-                  type="text"
-                  name="name"
                   value={this.state.name}
-                  //value='testname'
                   required
                   fullWidth
-                  onChange={this.handleNameChange}
+                  onChange={this.handleNameChange('name')}
+                  style={{width:'60%'}}
                 />
                 <Divider style={dividerStyle} />
                 <Button variant="outlined" color="primary" onClick={this.clickNext} >
@@ -155,13 +155,13 @@ export default class Steppers extends Component {
                       select
                       label="role"
                       helperText="Choose your role"
-                      name="role"
                       value={this.state.currentUserRole}
                       //value='testrole'
                       required
                       margin="normal"
-                      onChange={this.handleChange}
-
+                      onChange={this.handleRoleChange('role')}
+                      fullWidth
+                      style={{width:'60%'}}
                     >
                       <MenuItem value="CTO" onChange={this.handleChange}>CTO</MenuItem>
                       <MenuItem value="full stack developer" onChange={this.handleChange}>Full stack Developer</MenuItem>
@@ -177,7 +177,7 @@ export default class Steppers extends Component {
             }
           </Form>
         </Grid>
-        <Grid item xs className={gridItem}>
+        <Grid item xs={8} className={gridItem}>
           <pre>
             {this.state.onSubmitValues &&
               JSON.stringify(this.state.onSubmitValues, null, 2)
